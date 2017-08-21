@@ -31,6 +31,40 @@ console.log(i);
 
 上面代码中，计数器`i`只在`for`循环体内有效，在循环体外引用就会报错。
 
+<DIV class="note">
+
+在let和const出现之前，var声明的变量的作用域是函数体。  
+先来一段ES5代码，每隔一秒钟打印一个数字（1-5）。
+```javascript
+for (var i = 1; i <= 5; i++) {
+    setTimeout(function() {
+        console.log(i);
+    }, i * 1000);
+}
+```
+执行上述代码，如愿以偿地看到每秒出一个数字，但是打印的都是6。  
+原因是在timeout回调函数里面调用的i，是外面的i的指针，而其值在循环结束时是6，因此回调函数读到的是6。  
+在ES6以前，解决上述问题的方案叫做IIFE（立即执行函数表达式），如下
+```javascript
+for (var i = 1; i <= 5; i++) {
+    (function(i) {
+        setTimeout(function() {
+            console.log(i)
+        }, i * 1000);
+    })(i);
+}
+```
+而ES6的解决方案是，使用let声明i，使得i的作用域在for这个代码块，那么传到timeout回调函数的是i的值而不是其指针。
+```javascript
+for (let i = 1; i <= 5; i++) {
+    setTimeout(function() {
+        console.log(i)
+    }, i * 1000);
+}
+```
+
+</div>
+
 下面的代码如果使用`var`，最后输出的是`10`。
 
 ```javascript
@@ -662,4 +696,3 @@ const global = getGlobal();
 ```
 
 上面代码将顶层对象放入变量`global`。
-
